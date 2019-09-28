@@ -1,0 +1,20 @@
+{
+  "name": "@roelofjan-elsinga/angular-translator",
+  "version": "1.0.0",
+  "description": "This is a version of angular-translate for AngularJS ported to Angular.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roelofjan-elsinga/angular-translator.git"
+  },
+  "keywords": [
+    "angular",
+    "translate"
+  ],
+  "author": "Roelof Jan Elsinga",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/roelofjan-elsinga/angular-translator/issues"
+  },
+  "homepage": "https://github.com/roelofjan-elsinga/angular-translator#readme"
+}
