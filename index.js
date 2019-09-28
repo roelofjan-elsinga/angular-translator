@@ -1,5 +1,5 @@
-import {Extractor} from './src/Extractor';
-import {compile} from "./src/Compiler";
+const Extractor = require('./src/Extractor').Extractor;
+const compile = require('./src/Compiler').compile;
 
 function AngularGetText(options) {
     this.compileTranslations = options.compileTranslations;
