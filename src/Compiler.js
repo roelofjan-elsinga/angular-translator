@@ -163,12 +163,9 @@ const Compiler = (function () {
     return Compiler;
 })();
 
-function AngularGetTextPlugin(options) {
-    this.compileTranslations = options.compileTranslations;
-    this.extractStrings = options.extractStrings;
-}
 
-function compile(options) {
+
+module.exports.compile = function compile(options) {
     // https://github.com/rubenv/grunt-angular-gettext/blob/master/tasks/compile.js#L7
     if (!Compiler.hasFormat(options.format)) {
         throw new Error('There is no "' + options.format + '" output format.');
@@ -189,42 +186,4 @@ function compile(options) {
     } );
 
     return outputs;
-}
-
-AngularGetTextPlugin.prototype.apply = function(compiler) {
-    const options = this;
-
-    compiler.plugin('emit', (compilation, done) => {
-
-        if (options.compileTranslations) {
-            const results = compile(options.compileTranslations);
-            results.forEach( (result) => {
-                const { fileName, content } = result;
-                const outPath = path.join(options.compileTranslations.outputFolder, fileName);
-                compilation.assets[outPath] = {
-                    source: function() {
-                        return content;
-                    },
-                    size: function() {
-                        return content.length;
-                    }
-                };
-            } );
-        }
-
-        if (options.extractStrings) {
-            var extractor = new Extractor(options.extractStrings);
-
-            const filePaths = glob.sync(options.extractStrings.input)
-            filePaths.forEach( (fileName) => {
-                var content = fs.readFileSync(fileName, 'utf8');
-                extractor.parse(fileName, content);
-            });
-            fs.writeFileSync(options.extractStrings.destination, extractor.toString())
-        }
-
-        done();
-    });
 };
-
-module.exports.Compiler = AngularGetTextPlugin;

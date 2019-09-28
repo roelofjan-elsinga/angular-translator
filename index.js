@@ -1,5 +1,45 @@
 import {Extractor} from './src/Extractor';
-import {Compiler} from "./src/Compiler";
+import {compile} from "./src/Compiler";
 
-module.exports.Extractor = Extractor;
-module.exports.Compiler = Compiler;
+function AngularGetText(options) {
+    this.compileTranslations = options.compileTranslations;
+    this.extractStrings = options.extractStrings;
+}
+
+AngularGetText.prototype.apply = function(compiler) {
+    const options = this;
+
+    compiler.plugin('emit', (compilation, done) => {
+
+        if (options.compileTranslations) {
+            const results = compile(options.compileTranslations);
+            results.forEach( (result) => {
+                const { fileName, content } = result;
+                const outPath = path.join(options.compileTranslations.outputFolder, fileName);
+                compilation.assets[outPath] = {
+                    source: function() {
+                        return content;
+                    },
+                    size: function() {
+                        return content.length;
+                    }
+                };
+            } );
+        }
+
+        if (options.extractStrings) {
+            var extractor = new Extractor(options.extractStrings);
+
+            const filePaths = glob.sync(options.extractStrings.input)
+            filePaths.forEach( (fileName) => {
+                var content = fs.readFileSync(fileName, 'utf8');
+                extractor.parse(fileName, content);
+            });
+            fs.writeFileSync(options.extractStrings.destination, extractor.toString())
+        }
+
+        done();
+    });
+};
+
+module.exports.AngularGetText = AngularGetText;
