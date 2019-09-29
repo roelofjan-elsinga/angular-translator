@@ -1,5 +1,7 @@
 const Extractor = require('./src/Extractor').Extractor;
 const compile = require('./src/Compiler').compile;
+const fs = require('fs');
+const glob = require("glob");
 
 function AngularGetText(options) {
     this.compileTranslations = options.compileTranslations;
