@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/roelofjan-elsinga/angular-translator/issues"
   },
-  "homepage": "https://github.com/roelofjan-elsinga/angular-translator#readme"
+  "homepage": "https://github.com/roelofjan-elsinga/angular-translator#readme",
+  "dependencies": {
+    "pofile": "^1.1.0"
+  }
 }
