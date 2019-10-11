@@ -1,6 +1,6 @@
 {
   "name": "@roelofjan-elsinga/angular-translator",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "This is a version of angular-translate for AngularJS ported to Angular.",
   "main": "index.js",
   "repository": {
