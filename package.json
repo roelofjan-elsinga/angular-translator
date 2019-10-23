@@ -2,7 +2,7 @@
   "name": "@roelofjan-elsinga/angular-translator",
   "version": "1.0.6",
   "description": "This is a version of angular-translate for AngularJS ported to Angular.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/roelofjan-elsinga/angular-translator.git"
@@ -17,8 +17,22 @@
     "url": "https://github.com/roelofjan-elsinga/angular-translator/issues"
   },
   "homepage": "https://github.com/roelofjan-elsinga/angular-translator#readme",
+  "scripts": {
+    "compile": "babel --presets=env -d dist src",
+    "prepublish": "npm run compile"
+  },
   "dependencies": {
+    "@typescript-eslint/parser": "^2.5.0",
+    "babel-preset-env": "^1.7.0",
+    "babylon": "^6.18.0",
     "binary-search": "^1.3.6",
-    "pofile": "^1.1.0"
+    "cheerio": "^1.0.0-rc.3",
+    "eslint": "^6.5.1",
+    "lodash": "^4.17.15",
+    "pofile": "^1.1.0",
+    "typescript": "^3.6.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
   }
 }

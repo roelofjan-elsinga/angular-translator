@@ -1,18 +1,18 @@
 'use strict';
 
-var cheerio = require('cheerio');
-var Po = require('pofile');
-var babylon = require('babylon');
-var tsParser = require('@typescript-eslint/parser');
-var search = require('binary-search');
-var _ = require('lodash');
+import * as cheerio from 'cheerio';
+import Po from 'pofile';
+import * as babylon from 'babylon';
+import {parse as tsParse} from '@typescript-eslint/parser';
+import search from 'binary-search';
+import _ from 'lodash';
 
-var escapeRegex = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
-var noContext = '$$noContext';
+const escapeRegex = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
+const noContext = '$$noContext';
 
 function mkAttrRegex(startDelim, endDelim, attribute) {
-    var start = startDelim.replace(escapeRegex, '\\$&');
-    var end = endDelim.replace(escapeRegex, '\\$&');
+    let start = startDelim.replace(escapeRegex, '\\$&');
+    const end = endDelim.replace(escapeRegex, '\\$&');
 
     if (start === '' && end === '') {
         start = '^';
@@ -198,12 +198,12 @@ var Extractor = (function () {
     Extractor.prototype.extractJs = function (filename, src, lineNumber) {
         // used for line number of JS in HTML <script> tags
         lineNumber = lineNumber || 0;
-        var self = this;
-        var syntax;
-        var extension = filename.split('.').pop();
+        const self = this;
+        let syntax;
+        const extension = filename.split('.').pop();
         try {
             if (extension === 'ts' || extension === 'tsx') {
-                syntax = tsParser.parse(src, {
+                syntax = tsParse(src, {
                     sourceType: 'module',
                     comment: true,
                     ecmaFeatures: {
@@ -224,6 +224,8 @@ var Extractor = (function () {
                 });
             }
         } catch (err) {
+            console.warn(err);
+
             var errMsg = 'Error parsing';
             if (filename) {
                 errMsg += ' ' + filename;

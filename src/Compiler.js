@@ -1,39 +1,12 @@
 'use strict';
 
-const Extractor = require("./Extractor");
-const fs = require('fs');
-const glob = require("glob");
-const path = require("path");
-const po = require('pofile');
-const _ = require('lodash');
+import * as fs from 'fs';
+import * as glob from 'glob';
+import * as path from 'path';
+import * as Po from 'pofile';
+import _ from 'lodash';
 
 const formats = {
-    javascript: {
-        addLocale: function (locale, strings) {
-            return '    gettextCatalog.setStrings(\'' + locale + '\', ' + JSON.stringify(strings) + ');\n';
-        },
-        format: function (locales, options) {
-            let angular = 'angular';
-            if (options.browserify) {
-                angular = 'require(\'angular\')';
-            }
-            let module = angular + '.module(\'' + options.module + '\')' +
-                '.run([\'gettextCatalog\', function (gettextCatalog) {\n' +
-                '/* jshint -W100 */\n' +
-                locales.join('') +
-                '/* jshint +W100 */\n';
-            if (options.defaultLanguage) {
-                module += 'gettextCatalog.currentLanguage = \'' + options.defaultLanguage + '\';\n';
-            }
-            module += '}]);';
-
-            if (options.requirejs) {
-                return 'define([\'angular\', \'' + options.modulePath + '\'], function (angular) {\n' + module + '\n});';
-            }
-
-            return module;
-        }
-    },
     json: {
         addLocale: function (locale, strings) {
             return {
@@ -59,7 +32,7 @@ const noContext = '$$noContext';
 const Compiler = (function () {
     function Compiler(options) {
         this.options = _.extend({
-            format: 'javascript',
+            format: 'json',
             module: 'gettext'
         }, options);
     }
@@ -115,7 +88,7 @@ const Compiler = (function () {
         let locales = [];
 
         inputs.forEach(function (input) {
-            let catalog = po.parse(input);
+            let catalog = Po.parse(input);
 
             if (!catalog.headers.Language) {
                 throw new Error('No Language header found!');
@@ -163,9 +136,7 @@ const Compiler = (function () {
     return Compiler;
 })();
 
-
-
-module.exports.compile = function compile(options) {
+export function compile(options) {
     // https://github.com/rubenv/grunt-angular-gettext/blob/master/tasks/compile.js#L7
     if (!Compiler.hasFormat(options.format)) {
         throw new Error('There is no "' + options.format + '" output format.');
@@ -175,8 +146,8 @@ module.exports.compile = function compile(options) {
         format: options.format
     });
 
-    const filePaths = glob.sync(options.input)
-    const outputs = filePaths.map( (filePath) => {
+    const filePaths = glob.sync(options.input);
+    return filePaths.map( (filePath) => {
         const content = fs.readFileSync(filePath, options.encoding || 'utf-8');
         const fullFileName = path.basename(filePath);
         return {
@@ -184,6 +155,4 @@ module.exports.compile = function compile(options) {
             fileName: path.basename(filePath, path.extname(fullFileName)) + '.' + options.format
         };
     } );
-
-    return outputs;
-};
+}
