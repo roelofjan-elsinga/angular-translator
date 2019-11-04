@@ -31,9 +31,11 @@ export class AngularTranslator {
             }
 
             if (this.extractStrings) {
-                var extractor = new Extractor(this.extractStrings);
+                const extractor = new Extractor(this.extractStrings);
 
-                const filePaths = glob.sync(this.extractStrings.input);
+                const filePaths = glob.sync(this.extractStrings.input, {
+                    follow: true
+                });
 
                 filePaths.forEach( (fileName) => {
                     const content = fs.readFileSync(fileName, 'utf8');
